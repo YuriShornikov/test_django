@@ -23,11 +23,23 @@ def student():
 
     return factory
 
-def test_get_courses(client, course):
-    courses = course(_quantity=10)
+@pytest.mark.django_db
+def test_get_courses(client, course, student):
+    courses = course(_quantity=1)
+    students = student(_quantity=5)
 
-    response = client.get('/courses/')
+    response = client.get('/api/v1/courses/')
+
     assert response.status_code == 200
+
+    data = response.json()
+    assert len(data) == len(courses)#проверка длины словаря
+    for i, m in enumerate(data):
+        assert m['name'] == courses[i].name#проверка имени курса в базе данных с созданным
+
+    # assert data[0] == 1
+
+
 
 
 # def test_example():

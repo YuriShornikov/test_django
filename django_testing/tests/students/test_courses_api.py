@@ -5,13 +5,15 @@ import pytest
 @pytest.mark.django_db # создание курса через фабрику, проверка гет запроса, и соответствие имени
 def test_get_course(client, url, create_course, student):
 
-    response = client.get(url)
+    response = client.get(f'{url}{create_course[0].id}')
 
     assert response.status_code == 200 #проверка статуса
 
     data = response.json()
-    for i, m in enumerate(data):
-        assert m['name'] == create_course[i].name  #проверка имени курса в базе данных с созданным
+    print(data)
+    assert data['name'] == create_course[0].name
+    # for i, m in enumerate(data):
+    #     assert m['name'] == create_course[i].name  #проверка имени курса в базе данных с созданным
 
 @pytest.mark.django_db #проверка длины списка курсов
 def test_get_list_courses(client, url, course):
